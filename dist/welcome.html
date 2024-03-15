@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <title>Document</title>
+</head>
+<script>
+        const BASE_ADDR = 'https://api-new-login-test.preempt.life'
+        async function logCookie () {
+            const cookieData = Cookies.get('key1');
+            console.log("logCookie:: ", cookieData);
+        }
+        function generateCookies(cookieData = { key1: "value1"}) {
+            let customString = [];
+            const domain = "Domain=.preempt.life; ";
+            const defaults = "SameSite=Strict; Path=/; ";
+            for (const [key, value] of Object.entries(cookieData)) {
+                customString.push(`${key}=${value}; ` + domain + defaults);
+            }
+            return customString;
+        }
+
+        // FrontEnd Style Setting of Cookies
+        function setCookies () {
+            const cookieContent = generateCookies({ backendCookie: "fakeVal", backendAnother: "stillFake"})
+
+            console.log("log::", cookieContent.join(""));
+            for (const cookieData of cookieContent){
+                document.cookie= cookieData;
+            }
+        }
+
+        // BackEnd Style of Setting Cookies: Check Lambda Function poc_set_cookie
+        function awsReq () {
+            fetch(`${BASE_ADDR}/touch`, {
+                method: "GET",
+                credentials: 'include',
+                
+            }).then(response => {
+                if(!response.ok)
+                    throw new Error("Error!");
+
+                return response.json();
+            }).then(data => {
+                console.log('data::',data.message)
+                return data;
+            })
+        }
+
+        function checkCookie(e) {
+            e.preventDefault();
+            const inputValue = document.getElementById("cookie_key").value;
+            const cookieVal = Cookies.get(inputValue);
+            console.log("Check Cookie::", cookieVal);
+            document.getElementById("cookie_val").innerText = cookieVal;
+        }
+
+        function awsReqLogin () {
+            fetch(`${BASE_ADDR}/login`, {
+                method: "GET",
+                credentials: 'include',
+                
+            }).then(response => {
+                if(!response.ok)
+                    throw new Error("Error!");
+
+                return response.json();
+            }).then(data => {
+                console.log('data::',data.message)
+
+                document.getElementById("aws_cookie").innerText = Cookies.get("name");
+                return data;
+            })
+        }
+
+</script>
+<body>
+    <div>POC Cookie Tester</div>
+    <button onclick="setCookies()">Set key1 Cookies</button>
+    <button onclick="logCookie()">Log key1 Click</button>
+    <button onclick="awsReqLogin()">AWS Login</button>
+    <button onclick="awsReq()">AWS Request</button>
+    <span id="aws_cookie"></span>
+    <form onsubmit="return checkCookie(event)">
+        <div>Cookie Checker</div>
+        <input id="cookie_key" placeholder="Cookie Key"/>
+        <button type="submit">Log Cookie</button>
+        <span id="cookie_val"></span>
+    </form>
+</body>
+</html>
