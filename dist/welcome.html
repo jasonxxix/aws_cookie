@@ -24,7 +24,7 @@
 
         // FrontEnd Style Setting of Cookies
         function setCookies () {
-            const cookieContent = generateCookies({ backendCookie: "fakeVal", backendAnother: "stillFake"})
+            const cookieContent = generateCookies({ key1: "fakeVal", backendAnother: "stillFake"})
 
             console.log("log::", cookieContent.join(""));
             for (const cookieData of cookieContent){
