@@ -32,12 +32,10 @@
             }
         }
 
-        // BackEnd Style of Setting Cookies: Check Lambda Function poc_set_cookie
-        function awsReq () {
-            fetch(`${BASE_ADDR}/touch`, {
+        function awsRestAPIReq () {
+            fetch(`${BASE_ADDR}/test/test`, {
                 method: "GET",
                 credentials: 'include',
-                
             }).then(response => {
                 if(!response.ok)
                     throw new Error("Error!");
@@ -57,31 +55,13 @@
             document.getElementById("cookie_val").innerText = cookieVal;
         }
 
-        function awsReqLogin () {
-            fetch(`${BASE_ADDR}/login`, {
-                method: "GET",
-                credentials: 'include',
-                
-            }).then(response => {
-                if(!response.ok)
-                    throw new Error("Error!");
-
-                return response.json();
-            }).then(data => {
-                console.log('data::',data.message)
-
-                document.getElementById("aws_cookie").innerText = Cookies.get("name");
-                return data;
-            })
-        }
 
 </script>
 <body>
     <div>POC Cookie Tester</div>
     <button onclick="setCookies()">Set key1 Cookies</button>
     <button onclick="logCookie()">Log key1 Click</button>
-    <button onclick="awsReqLogin()">AWS Login</button>
-    <button onclick="awsReq()">AWS Request</button>
+    <button onclick="awsRestAPIReq()">AWS Rest Request</button>
     <span id="aws_cookie"></span>
     <form onsubmit="return checkCookie(event)">
         <div>Cookie Checker</div>

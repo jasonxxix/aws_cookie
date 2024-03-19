@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const cookeParser = require('cookie-parser');
 
+
+
+
 const jwt = require('jsonwebtoken');
 
 const app = express();
@@ -21,23 +24,16 @@ app.get("/", (req, res)=>{
 })
 
 
-app.post("/jwt", (req, res) => {
+app.get("/jwt", (req, res) => {
     const unsigned_data = {
         name: "John Doe",
         job: "Student",
+        id: 1,
     }
     const token = jwt.sign(unsigned_data, SAMPLE_SECRET)
 
 
 
-    // Set cookie in the response header
-    res.cookie('jwt_cxookie', token, {
-        httpOnly: false,
-        sameSite: 'strict',
-        secure: false,
-    });
-
-    // res.cookie('ss', 'sample')
     return res.send({ data: token })
 })
 
